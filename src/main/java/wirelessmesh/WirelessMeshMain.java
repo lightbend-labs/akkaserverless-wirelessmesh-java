@@ -26,10 +26,10 @@ public class WirelessMeshMain {
                                     .findServiceByName("CustomerLocationByEmailService"),
                             "customer_locations",
                             Wirelessmeshdomain.getDescriptor(),
-                            Customerlocationview.getDescriptor());
-//                    .registerAction(
-//                            new ToggleNightlightAction(),
-//                            Devicecontrol.getDescriptor().findServiceByName("DeviceControlService"));
+                            Customerlocationview.getDescriptor())
+                   .registerAction(
+                           new ToggleNightlightAction(),
+                           Devicecontrol.getDescriptor().findServiceByName("DeviceControlService"));
     //                    .registerAction(
 //                            new PublishingAction(),
 //                            Publishing.getDescriptor().findServiceByName("PublishingService"))
