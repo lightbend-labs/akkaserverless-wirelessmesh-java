@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
 import "akkaserverless/annotations.proto";
 
 package customerlocationview;
@@ -37,4 +38,17 @@ service CustomerLocationByEmailService {
           get: "/wirelessmesh/customer-locations"
         };
     }
+
+    // handle other events which are not managed above
+    rpc CatchOthers(google.protobuf.Any) returns (CustomerLocationDto) {
+      option (akkaserverless.method).eventing = {
+        in: {
+          event_log: "customer-location-entity"
+        }
+      };
+      option (akkaserverless.method).view.update = {
+        table: "customer_locations"
+        transform_updates: true
+      };
+    };
 }
