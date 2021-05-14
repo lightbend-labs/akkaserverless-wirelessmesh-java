@@ -33,11 +33,11 @@ public class WirelessMeshMain {
                             Wirelessmeshdomain.getDescriptor(),
                             Customerlocationview.getDescriptor())
                     .registerAction(
-                            new ToggleNightlightAction(),
+                            ToggleNightlightAction.class,
                             Devicecontrol.getDescriptor().findServiceByName("DeviceControlService"),
                             Wirelessmeshdomain.getDescriptor())
                     .registerAction(
-                            new PublishingAction(),
+                            PublishingAction.class,
                             Publishing.getDescriptor().findServiceByName("PublishingService"),
                             Wirelessmeshdomain.getDescriptor()
                     );
