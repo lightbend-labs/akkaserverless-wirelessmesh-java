@@ -267,5 +267,17 @@
             <version>3.6.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+          <!-- for JSON formatted logging -->
+          <groupId>ch.qos.logback.contrib</groupId>
+          <artifactId>logback-json-classic</artifactId>
+          <version>0.1.5</version>
+        </dependency>
+        <dependency>
+          <!-- for JSON formatted logging -->
+          <groupId>ch.qos.logback.contrib</groupId>
+          <artifactId>logback-jackson</artifactId>
+          <version>0.1.5</version>
+        </dependency>
     </dependencies>
 </project>

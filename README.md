@@ -142,7 +142,7 @@ To test using Postman(or curl).
 * Assuming you have deployed to akkaserverless and exposed your service to 'winter-mountain-2372.us-east1.apps.akkaserverless.com'...
 * **Test 0:** Make sure if there is any data in wirelessmesh-feed
 ```
-gcloud pubsub subscriptions pull wirelessmesh-feed
+gcloud pubsub subscriptions pull wirelessmesh-feed --auto-ack
 ```
 Check if there is any data in the feed.
 * **Test 1:** Create a Postman POST request to 'https://winter-mountain-2372.us-east1.apps.akkaserverless.com/wirelessmesh/add-customer-location' with the json body '{"customer_location_id": "my-first-location", "access_token": "my life access token if applicable in alphanumeric", "email": "some@email.com", "zipcode": "11111"}'
@@ -159,7 +159,7 @@ curl -X POST -H "Content-Type: application/json"  --data '{"customer_location_id
 * You should see a response of '200(OK) {}', this will be the response of any POST
 * Ideally it should trigger PublishCustomerLocationAdded action, which write data to topic "wirelessmesh", we can check it by command
 ```
-gcloud pubsub subscriptions pull wirelessmesh-feed
+gcloud pubsub subscriptions pull wirelessmesh-feed --auto-ack
 ```
 NOTE: sometimes you need to wait for like 30-60 seconds for data ready.
 If it does not data, just retry several times.
@@ -253,7 +253,7 @@ gcloud pubsub topics create <topic>
 gcloud pubsub subscriptions create <subscription> --topic=<topic>
 
 # pull data from subscriptions
-gcloud pubsub subscriptions pull <subscription>
+gcloud pubsub subscriptions pull <subscription> --auto-ack
 ```
 
 ## Contributing
