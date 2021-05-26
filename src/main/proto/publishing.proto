@@ -1,6 +1,5 @@
 syntax = "proto3";
 
-import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/any.proto";
 import "akkaserverless/annotations.proto";
@@ -32,7 +31,7 @@ service PublishingService {
       };
     }
 
-    // handle other events which are not managed above
+  // handle other events which are not managed above
   rpc CatchOthers(google.protobuf.Any) returns (google.protobuf.Empty) {
     option (akkaserverless.method).eventing.in = {
         event_sourced_entity:  "customer-location-entity"

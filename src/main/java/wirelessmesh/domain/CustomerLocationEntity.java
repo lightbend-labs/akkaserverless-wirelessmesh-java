@@ -32,7 +32,7 @@ import java.util.stream.Stream;
       * This section contains the private state variables necessary for this entity.
       */
 
-     private String customerLocationId;
+     private final String customerLocationId;
 
      private boolean added = false;
 
@@ -44,7 +44,7 @@ import java.util.stream.Stream;
 
      private String zipcode = "";
 
-     private List<Device> devices = new ArrayList<Device>();
+     private List<DeviceState> devices = new ArrayList<>();
 
      /**
       * Constructor.
@@ -136,7 +136,7 @@ import java.util.stream.Stream;
      public void customerLocationRemoved(CustomerLocationRemoved customerLocationRemoved) {
          this.removed = true;
          this.added = false;
-         devices = new ArrayList<Device>();
+         devices = new ArrayList<>();
      }
 
      /**
@@ -176,7 +176,7 @@ import java.util.stream.Stream;
       */
      @EventHandler
      public void deviceActivated(DeviceActivated deviceActivated) {
-         devices.add(Device.newBuilder()
+         devices.add(DeviceState.newBuilder()
                  .setDeviceId(deviceActivated.getDeviceId())
                  .setCustomerLocationId(customerLocationId)
                  .setActivated(true)
@@ -258,8 +258,8 @@ import java.util.stream.Stream;
       */
      @EventHandler
      public void roomAssigned(RoomAssigned roomAssigned) {
-         Device old = findDevice(roomAssigned.getDeviceId()).get();
-         Device device = old.toBuilder()
+         DeviceState old = findDevice(roomAssigned.getDeviceId()).get();
+         DeviceState device = old.toBuilder()
                  .setRoom(roomAssigned.getRoom())
                  .build();
 
@@ -278,7 +278,7 @@ import java.util.stream.Stream;
              ctx.fail("customerLocation does not exist.");
          }
          else {
-             Optional<Device> deviceMaybe = findDevice(toggleNightlightCommand.getDeviceId());
+             Optional<DeviceState> deviceMaybe = findDevice(toggleNightlightCommand.getDeviceId());
 
              if (!deviceMaybe.isPresent()) {
                  ctx.fail("Device does not exist");
@@ -306,8 +306,8 @@ import java.util.stream.Stream;
       */
      @EventHandler
      public void nightlightToggled(NightlightToggled nightlightToggled) {
-         Device old = findDevice(nightlightToggled.getDeviceId()).get();
-         Device device = old.toBuilder()
+         DeviceState old = findDevice(nightlightToggled.getDeviceId()).get();
+         DeviceState device = old.toBuilder()
                  .setNightlightOn(nightlightToggled.getNightlightOn())
                  .build();
 
@@ -326,7 +326,34 @@ import java.util.stream.Stream;
              ctx.fail("customerLocation does not exist.");
          }
 
-         return CustomerLocation.newBuilder().setCustomerLocationId(customerLocationId)
+         return CustomerLocation.newBuilder()
+                 .setCustomerLocationId(customerLocationId)
+                 .setAccessToken("[hidden]")
+                 .setEmail(email)
+                 .setZipcode(zipcode)
+                 .setAdded(added)
+                 .setRemoved(removed)
+                 // Must convert domain to API, which are decoupled for the sake of independent evolution.
+                 .addAllDevices(devices.stream()
+                         .map(d ->
+                             Device.newBuilder()
+                                 .setCustomerLocationId(d.getCustomerLocationId())
+                                 .setDeviceId(d.getDeviceId())
+                                 .setActivated(d.getActivated())
+                                 .setRoom(d.getRoom())
+                                 .setNightlightOn(d.getNightlightOn())
+                                 .build()
+                         ).collect(Collectors.toList()))
+                 .build();
+     }
+
+     /**
+      * Return current state when called to snapshot.
+      */
+     @Snapshot
+     public CustomerLocationState snapshot() {
+         return CustomerLocationState.newBuilder()
+                 .setCustomerLocationId(customerLocationId)
                  .setAccessToken("[hidden]")
                  .setEmail(email)
                  .setZipcode(zipcode)
@@ -336,9 +363,23 @@ import java.util.stream.Stream;
      }
 
      /**
+      * Set state to the most recent snapshot.
+      */
+     @SnapshotHandler
+     public void handleSnapshot(CustomerLocationState state) {
+         devices.clear();
+         accessToken = state.getAccessToken();
+         email = state.getEmail();
+         zipcode = state.getZipcode();
+         added = state.getAdded();
+         removed = state.getRemoved();
+         devices = state.getDevicesList();
+     }
+
+     /**
       * Helper function to find a device in the device collection.
       */
-     private Optional<Device> findDevice(String deviceId) {
+     private Optional<DeviceState> findDevice(String deviceId) {
          return devices.stream()
                  .filter(d -> d.getDeviceId().equals(deviceId))
                  .findFirst();
@@ -347,7 +388,7 @@ import java.util.stream.Stream;
      /**
       * Helper function to replace the state of a given device within the device collection.
       */
-     private void replaceDevice(Device device) {
+     private void replaceDevice(DeviceState device) {
          devices = Stream.concat(devices.stream()
                          .filter(d -> !d.getDeviceId().equals(device.getDeviceId())),
                  Stream.of(device))
