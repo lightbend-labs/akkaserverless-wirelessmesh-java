@@ -40,3 +40,21 @@ message NightlightToggled {
   bool nightlightOn = 3;
   string accessToken = 4;
 }
+
+message DeviceState {
+  string device_id = 1;
+  bool activated = 2;
+  string customer_location_id = 3;
+  string room = 4;
+  bool nightlight_on = 5;
+}
+
+message CustomerLocationState {
+  string customer_location_id = 1;
+  string access_token = 2;
+  string email = 3;
+  string zipcode = 4;
+  bool added = 5;
+  bool removed = 6;
+  repeated DeviceState devices = 7;
+}
