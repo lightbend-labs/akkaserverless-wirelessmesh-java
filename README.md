@@ -24,7 +24,7 @@ To build and deploy this example application, you'll need to have:
 * Java 11 or higher installed
 * Maven 3.x or higher installed
 * The Docker CLI installed
-* A [service account](https://cloud.google.com/docs/authentication/production) that can connect to your Google Cloud Pubsub. Please ensure that the service account created has been assigned the proper roles for accessing Google Pubsub. For more details on setting up the service account and generating the key file, please have a look at this [document](https://docs.akkaserverless.dev/how-to/message-broker.html)
+* A [service account](https://cloud.google.com/docs/authentication/production) that can connect to your Google Cloud Pubsub. Please ensure that the service account created has been assigned the proper roles for accessing Google Pubsub. For more details on setting up the service account and generating the key file, please have a look at this [document](https://developer.lightbend.com/docs/akka-serverless/how-to/message-broker.html)
 
 ## Build, Deploy, and Test
 
