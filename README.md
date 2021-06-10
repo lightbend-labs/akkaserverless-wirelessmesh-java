@@ -1,4 +1,4 @@
-# Akka Serverless - Wireless Mesh Example App
+# Akka Serverless - Wireless Mesh Example App 
 
 A Java-based example app for [Akka Serverless](https://developer.lightbend.com/docs/akka-serverless/)
 
