@@ -28,14 +28,14 @@ To build and deploy this example application, you'll need to have:
 
 ## Build, Deploy, and Test
 
-### Prepare your Google Could Pubsub
+### Prepare your Google Cloud Pubsub
 
-#### Step 1: create a Google Could Pubsub topic
+#### Step 1: create a Google Cloud Pubsub topic
 Create a Pub/Sub topic called 'wirelessmesh' under your own Google Cloud account.
 For example,
 
 ```
-# login to google cloud
+# login to Google Cloud
 gcloud auth login
 
 # list all projects
@@ -70,7 +70,7 @@ If you have an LIFX bulb and would like it to stand in for a wirelessmesh device
 * Have an operational bulb
 * When you create your customer location, be sure to set the access token to the authorizaton token you requested with LIFX.
 * When you activate the device in this app, make sure it has the same device id as your bulb.
-* More information [here][https://api.developer.lifx.com]
+* More information at the [LIFX API](https://api.developer.lifx.com) page.
 
 ### Build your container
 
@@ -105,7 +105,7 @@ The next step is to expose a route and enable CORS
 
 Akka Serverless will return the hostname where your service is exposed, which will be similar to the following:
 
-`snowy-truth-4046.us-east1.apps.akkaserverless.com`
+`snowy-truth-4046.us-east1.akkaserverless.app`
 
 This exposed hostname will be used when we test the REST endpoints in the following sections.
 
@@ -154,19 +154,19 @@ gcloud pubsub topics list-subscriptions wirelessmesh
 To test using Postman(or curl):
 
 * First install Postman, [found here](https://www.postman.com)
-* Assuming you have deployed to akkaserverless and exposed your service to 'winter-mountain-2372.us-east1.apps.akkaserverless.com'...
+* Assuming you have deployed to akkaserverless and exposed your service to `winter-mountain-2372.us-east1.akkaserverless.app`...
 * **Test 0:** Make sure if there is any data in wirelessmesh-feed
 ```
 gcloud pubsub subscriptions pull wirelessmesh-feed --auto-ack
 ```
 Check if there is any data in the feed.
-* **Test 1:** Create a Postman POST request to 'https://winter-mountain-2372.us-east1.apps.akkaserverless.com/wirelessmesh/add-customer-location' with the json body '{"customer_location_id": "my-first-location", "access_token": "my life access token if applicable in alphanumeric", "email": "some@email.com", "zipcode": "11111"}'
+* **Test 1:** Create a Postman POST request to `https://winter-mountain-2372.us-east1.akkaserverless.app/wirelessmesh/add-customer-location` with the json body `{"customer_location_id": "my-first-location", "access_token": "my life access token if applicable in alphanumeric", "email": "some@email.com", "zipcode": "11111"}`
 
 Or using Curl (NOTE: Assume access_token is "abcd1234", you can set it to any alphanumeric):
 
 ```
 # setup env variable for exposed route 
-export AS_HOST=winter-mountain-2372.us-east1.apps.akkaserverless.com
+export AS_HOST=winter-mountain-2372.us-east1.akkaserverless.app
 ```
 
 and run
@@ -183,7 +183,7 @@ gcloud pubsub subscriptions pull wirelessmesh-feed --auto-ack
 ```
 
 NOTE: sometimes you need to wait for like 30-60 seconds for data ready.
-If it does not data, just retry several times.
+If it does not show any data, just retry several times.
 
 It will show data like
 
@@ -191,8 +191,8 @@ It will show data like
 ┌────────────────────────────┬──────────────────┬──────────────────────────────────────────────────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │            DATA            │    MESSAGE_ID    │                    ATTRIBUTES                    │                                                                                               ACK_ID                                                                                               │
 ├────────────────────────────┼──────────────────┼──────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│                            │ 2257681511091503 │ ce-datacontenttype=application/protobuf          │ XXXXXXXXXXXXXXXXXXXXXXXXXXXKEUWAwgUBXx9cF5bdV1YdGhRDRlyfWByY1wTAgMWW3pWURsHXXXXXXXXXXXXXXXXXXXXXXXXXXXeWhsEaVlcdi-XXXXXXXXXXXXXXXXXXXXXXXXXXXtvZiM9XxJLLD5-MSpFQV5AEkw6H0RJUytDCypYEU4EISE-XXXXXX │
-│ my-3rd-locatioabcd1234 │                  │ ce-id=8aac4009-03f8-4562-9564-00e67fbxxxxx       │                                                                                                                                                                                                    │
+│                            │ 2257681511091503 │ ce-datacontenttype=application/protobuf          │ XXXXXXXXXXXXXXXXXXXXXXXXXXXKEUWAwgUBXx9cF5bdV1YdGhRDRlyfWByY1wTAgMWW3pWURsHXXXXXXXXXXXXXXXXXXXXXXXXXXXeWhsEaVlcdi-XXXXXXXXXXXXXXXXXXXXXXXXXXXtvZiM9XxJLLD5-MSpFQV5AEkw6H0RJUytDCypYEU4EISE-XXXXXX  │
+│ my-3rd-locatioabcd1234     │                  │ ce-id=8aac4009-03f8-4562-9564-00e67fbxxxxx       │                                                                                                                                                                                                    │
 │                            │                  │ ce-source=publishing.PublishingService           │                                                                                                                                                                                                    │
 │                            │                  │ ce-specversion=1.0                               │                                                                                                                                                                                                    │
 │                            │                  │ ce-subject=my-3rd-location                       │                                                                                                                                                                                                    │
@@ -201,7 +201,7 @@ It will show data like
 └────────────────────────────┴──────────────────┴──────────────────────────────────────────────────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-* **Test 2:** You can now create a GET request to 'https://winter-mountain-2372.us-east1.apps.akkaserverless.com/wirelessmesh/get-customer-location?customer_location_id=my-first-location'
+* **Test 2:** You can now create a GET request to `https://winter-mountain-2372.us-east1.akkaserverless.app/wirelessmesh/get-customer-location?customer_location_id=my-first-location`
 
 Or using Curl:
 
@@ -210,7 +210,7 @@ curl https://${AS_HOST}/wirelessmesh/get-customer-location?customer_location_id=
 ```
 
 * You should see a json response containing your customer location and no devices.
-* **Test 3:** Create a POST request to 'https://winter-mountain-2372.us-east1.apps.akkaserverless.com/wirelessmesh/activate-device' with the body '{"customer_location_id": "my-first-location", "device_id": "my-first-device"}'
+* **Test 3:** Create a POST request to `https://winter-mountain-2372.us-east1.akkaserverless.app/wirelessmesh/activate-device` with the body `{"customer_location_id": "my-first-location", "device_id": "my-first-device"}`
 
 Or using Curl:
 
@@ -218,7 +218,7 @@ Or using Curl:
 curl -X POST -H "Content-Type: application/json"  --data '{"customer_location_id": "my-first-location", "device_id": "my-first-device"}' https://${AS_HOST}/wirelessmesh/activate-device
 ```
 
-* **Test 4:** Create a POST request to 'https://winter-mountain-2372.us-east1.apps.akkaserverless.com/wirelessmesh/assign-room' with the body '{"customer_location_id": "my-first-location", "device_id": "my-first-device", "room": "office"}'
+* **Test 4:** Create a POST request to `https://winter-mountain-2372.us-east1.akkaserverless.app/wirelessmesh/assign-room` with the body `{"customer_location_id": "my-first-location", "device_id": "my-first-device", "room": "office"}`
 
 Or using Curl:
 
@@ -226,7 +226,7 @@ Or using Curl:
 curl -X POST -H "Content-Type: application/json"  --data '{"customer_location_id": "my-first-location", "device_id": "my-first-device", "room": "office"}' https://${AS_HOST}/wirelessmesh/assign-room
 ```
 
-* **Test 5:** Create a POST request to 'https://winter-mountain-2372.us-east1.apps.akkaserverless.com/wirelessmesh/toggle-nightlight' with the body '{"customer_location_id": "my-first-location", "device_id": "my-first-device"}'
+* **Test 5:** Create a POST request to `https://winter-mountain-2372.us-east1.akkaserverless.app/wirelessmesh/toggle-nightlight` with the body `{"customer_location_id": "my-first-location", "device_id": "my-first-device"}`
 
 Or using Curl:
 
@@ -243,7 +243,7 @@ curl https://${AS_HOST}/wirelessmesh/get-customer-location?customer_location_id=
 ```
 
 * You should see a json response with your customer location and a collection of your single device with the room assigned and the nightlight on
-* **Test 7:** Create a POST request to 'https://winter-mountain-2372.us-east1.apps.akkaserverless.com/wirelessmesh/remove-device' with the body '{"customer_location_id": "my-first-location", "device_id": "my-first-device"}'
+* **Test 7:** Create a POST request to `https://winter-mountain-2372.us-east1.akkaserverless.app/wirelessmesh/remove-device` with the body `{"customer_location_id": "my-first-location", "device_id": "my-first-device"}`
 
 Or using Curl:
 
@@ -252,7 +252,7 @@ curl -X POST -H "Content-Type: application/json"  --data '{"customer_location_id
 ```
 
 * You should see a json response no longer containing any devices
-* **Test 8:** Create a POST request to 'https://winter-mountain-2372.us-east1.apps.akkaserverless.com/wirelessmesh/remove-customer-location' with the body '{"customer_location_id": "my-first-location"}'
+* **Test 8:** Create a POST request to `https://winter-mountain-2372.us-east1.akkaserverless.app/wirelessmesh/remove-customer-location` with the body `{"customer_location_id": "my-first-location"}`
 
 Or using Curl:
 
